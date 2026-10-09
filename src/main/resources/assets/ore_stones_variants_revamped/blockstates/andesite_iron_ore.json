@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "ore_stones_variants_revamped:block/andesite_iron_ore"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "discard_chance_on_air_exposure": 0.0,
+    "size": 6,
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "minecraft:andesite"
+        },
+        "state": {
+          "Name": "ore_stones_variants_revamped:andesite_iron_ore"
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "minecraft:diorite"
+        },
+        "state": {
+          "Name": "ore_stones_variants_revamped:diorite_iron_ore"
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "minecraft:granite"
+        },
+        "state": {
+          "Name": "ore_stones_variants_revamped:granite_iron_ore"
+        }
+      }
+    ]
+  }
+}

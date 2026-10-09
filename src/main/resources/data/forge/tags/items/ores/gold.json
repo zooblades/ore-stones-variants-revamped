@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "ore_stones_variants_revamped:andesite_gold_ore",
+    "ore_stones_variants_revamped:diorite_gold_ore",
+    "ore_stones_variants_revamped:granite_gold_ore"
+  ]
+}

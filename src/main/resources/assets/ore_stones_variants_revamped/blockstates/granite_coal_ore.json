@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "ore_stones_variants_revamped:block/granite_coal_ore"
+    }
+  }
+}

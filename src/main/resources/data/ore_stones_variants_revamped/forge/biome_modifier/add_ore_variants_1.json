@@ -1,0 +1,8 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_mountain",
+  "features": [
+    "ore_stones_variants_revamped:ore_emerald_variants"
+  ],
+  "step": "underground_ores"
+}
