@@ -30,6 +30,9 @@ public final class ModBlocks {
     static {
         for (HostStone stone : HostStone.values()) {
             for (OreType ore : OreType.values()) {
+                if (!ore.enabled) {
+                    continue;
+                }
                 String name = stone.id + "_" + ore.id + "_ore";
                 RegistryObject<Block> block = BLOCKS.register(name, () -> createBlock(ore));
                 ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));

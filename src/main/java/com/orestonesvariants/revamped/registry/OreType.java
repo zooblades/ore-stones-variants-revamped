@@ -8,23 +8,26 @@ import net.minecraft.world.level.block.Blocks;
 import java.util.function.Supplier;
 
 public enum OreType {
-    COAL("coal", () -> Blocks.COAL_ORE, UniformInt.of(0, 2)),
-    COPPER("copper", () -> Blocks.COPPER_ORE, UniformInt.of(0, 0)),
-    IRON("iron", () -> Blocks.IRON_ORE, UniformInt.of(0, 0)),
-    GOLD("gold", () -> Blocks.GOLD_ORE, UniformInt.of(0, 0)),
-    REDSTONE("redstone", () -> Blocks.REDSTONE_ORE, null), // redstone ore has its own block class
-    LAPIS("lapis", () -> Blocks.LAPIS_ORE, UniformInt.of(2, 5)),
-    DIAMOND("diamond", () -> Blocks.DIAMOND_ORE, UniformInt.of(3, 7)),
-    EMERALD("emerald", () -> Blocks.EMERALD_ORE, UniformInt.of(3, 7));
+    COAL("coal", () -> Blocks.COAL_ORE, UniformInt.of(0, 2), true),
+    COPPER("copper", () -> Blocks.COPPER_ORE, UniformInt.of(0, 0), false), // no texture yet
+    IRON("iron", () -> Blocks.IRON_ORE, UniformInt.of(0, 0), true),
+    GOLD("gold", () -> Blocks.GOLD_ORE, UniformInt.of(0, 0), true),
+    REDSTONE("redstone", () -> Blocks.REDSTONE_ORE, null, false), // no texture yet; has its own block class
+    LAPIS("lapis", () -> Blocks.LAPIS_ORE, UniformInt.of(2, 5), false), // no texture yet
+    DIAMOND("diamond", () -> Blocks.DIAMOND_ORE, UniformInt.of(3, 7), true),
+    EMERALD("emerald", () -> Blocks.EMERALD_ORE, UniformInt.of(3, 7), false); // no texture yet
 
     public final String id;
     /** Vanilla ore whose block properties (hardness, tool requirement, sound) are copied. */
     public final Supplier<Block> vanilla;
     public final IntProvider xp;
+    /** Disabled ores are not registered and not generated. Keep in sync with "enabled" in tools/generate_resources.py. */
+    public final boolean enabled;
 
-    OreType(String id, Supplier<Block> vanilla, IntProvider xp) {
+    OreType(String id, Supplier<Block> vanilla, IntProvider xp, boolean enabled) {
         this.id = id;
         this.vanilla = vanilla;
         this.xp = xp;
+        this.enabled = enabled;
     }
 }

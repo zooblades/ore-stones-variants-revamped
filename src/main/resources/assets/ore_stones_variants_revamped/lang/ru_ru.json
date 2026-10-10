@@ -1,27 +1,15 @@
 {
   "itemGroup.ore_stones_variants_revamped": "Ore Stones Variants Revamped",
   "block.ore_stones_variants_revamped.andesite_coal_ore": "Андезитовая угольная руда",
-  "block.ore_stones_variants_revamped.andesite_copper_ore": "Андезитовая медная руда",
   "block.ore_stones_variants_revamped.andesite_iron_ore": "Андезитовая железная руда",
-  "block.ore_stones_variants_revamped.andesite_redstone_ore": "Андезитовая редстоуновая руда",
-  "block.ore_stones_variants_revamped.andesite_lapis_ore": "Андезитовая лазуритовая руда",
   "block.ore_stones_variants_revamped.andesite_gold_ore": "Андезитовая золотая руда",
   "block.ore_stones_variants_revamped.andesite_diamond_ore": "Андезитовая алмазная руда",
-  "block.ore_stones_variants_revamped.andesite_emerald_ore": "Андезитовая изумрудная руда",
   "block.ore_stones_variants_revamped.diorite_coal_ore": "Диоритовая угольная руда",
-  "block.ore_stones_variants_revamped.diorite_copper_ore": "Диоритовая медная руда",
   "block.ore_stones_variants_revamped.diorite_iron_ore": "Диоритовая железная руда",
-  "block.ore_stones_variants_revamped.diorite_redstone_ore": "Диоритовая редстоуновая руда",
-  "block.ore_stones_variants_revamped.diorite_lapis_ore": "Диоритовая лазуритовая руда",
   "block.ore_stones_variants_revamped.diorite_gold_ore": "Диоритовая золотая руда",
   "block.ore_stones_variants_revamped.diorite_diamond_ore": "Диоритовая алмазная руда",
-  "block.ore_stones_variants_revamped.diorite_emerald_ore": "Диоритовая изумрудная руда",
   "block.ore_stones_variants_revamped.granite_coal_ore": "Гранитная угольная руда",
-  "block.ore_stones_variants_revamped.granite_copper_ore": "Гранитная медная руда",
   "block.ore_stones_variants_revamped.granite_iron_ore": "Гранитная железная руда",
-  "block.ore_stones_variants_revamped.granite_redstone_ore": "Гранитная редстоуновая руда",
-  "block.ore_stones_variants_revamped.granite_lapis_ore": "Гранитная лазуритовая руда",
   "block.ore_stones_variants_revamped.granite_gold_ore": "Гранитная золотая руда",
-  "block.ore_stones_variants_revamped.granite_diamond_ore": "Гранитная алмазная руда",
-  "block.ore_stones_variants_revamped.granite_emerald_ore": "Гранитная изумрудная руда"
+  "block.ore_stones_variants_revamped.granite_diamond_ore": "Гранитная алмазная руда"
 }

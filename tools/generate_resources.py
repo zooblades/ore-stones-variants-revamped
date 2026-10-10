@@ -11,6 +11,7 @@ Edit the ORES table below to rebalance world generation, then re-run the script.
 """
 import json
 import os
+import shutil
 
 MOD_ID = "ore_stones_variants_revamped"
 ROOT = os.path.join("src", "main", "resources")
@@ -32,16 +33,17 @@ STONES = {  # id -> (vanilla block, ru name, en name)
 # rarity  = 1 in N chunks tries to generate at all (1 = every chunk)
 # air     = chance to discard a block that touches air (hides ores in caves)
 # biomes  = biome tag
+# enabled = False -> ore is not generated at all (also set "enabled" in OreType.java!)
 # ---------------------------------------------------------------------------
 ORES = {
-    "coal":     dict(en="Coal",     ru="угольная руда",    count=20, size=10, y_min=0, y_max=80, dist="uniform",   rarity=1, air=0.0, biomes="#minecraft:is_overworld"),
-    "copper":   dict(en="Copper",   ru="медная руда",      count=14, size=8,  y_min=0, y_max=64, dist="trapezoid", rarity=1, air=0.0, biomes="#minecraft:is_overworld"),
-    "iron":     dict(en="Iron",     ru="железная руда",    count=10, size=6,  y_min=0, y_max=60, dist="trapezoid", rarity=1, air=0.0, biomes="#minecraft:is_overworld"),
-    "redstone": dict(en="Redstone", ru="редстоуновая руда",count=8,  size=5,  y_min=0, y_max=15, dist="uniform",   rarity=1, air=0.0, biomes="#minecraft:is_overworld"),
-    "lapis":    dict(en="Lapis Lazuli", ru="лазуритовая руда", count=4, size=4, y_min=0, y_max=32, dist="trapezoid", rarity=1, air=0.5, biomes="#minecraft:is_overworld"),
-    "gold":     dict(en="Gold",     ru="золотая руда",     count=4,  size=4,  y_min=0, y_max=32, dist="trapezoid", rarity=1, air=0.0, biomes="#minecraft:is_overworld"),
-    "diamond":  dict(en="Diamond",  ru="алмазная руда",    count=4,  size=3,  y_min=0, y_max=16, dist="trapezoid", rarity=2, air=0.5, biomes="#minecraft:is_overworld"),
-    "emerald":  dict(en="Emerald",  ru="изумрудная руда",  count=6,  size=2,  y_min=0, y_max=64, dist="uniform",   rarity=2, air=0.0, biomes="#minecraft:is_mountain"),
+    "coal":     dict(en="Coal",     ru="угольная руда",    count=20, size=10, y_min=0, y_max=80, dist="uniform",   rarity=1, air=0.0, biomes="#minecraft:is_overworld", enabled=True),
+    "copper":   dict(en="Copper",   ru="медная руда",      count=14, size=8,  y_min=0, y_max=64, dist="trapezoid", rarity=1, air=0.0, biomes="#minecraft:is_overworld", enabled=False),
+    "iron":     dict(en="Iron",     ru="железная руда",    count=10, size=6,  y_min=0, y_max=60, dist="trapezoid", rarity=1, air=0.0, biomes="#minecraft:is_overworld", enabled=True),
+    "redstone": dict(en="Redstone", ru="редстоуновая руда",count=8,  size=5,  y_min=0, y_max=15, dist="uniform",   rarity=1, air=0.0, biomes="#minecraft:is_overworld", enabled=False),
+    "lapis":    dict(en="Lapis Lazuli", ru="лазуритовая руда", count=4, size=4, y_min=0, y_max=32, dist="trapezoid", rarity=1, air=0.5, biomes="#minecraft:is_overworld", enabled=False),
+    "gold":     dict(en="Gold",     ru="золотая руда",     count=4,  size=4,  y_min=0, y_max=32, dist="trapezoid", rarity=1, air=0.0, biomes="#minecraft:is_overworld", enabled=True),
+    "diamond":  dict(en="Diamond",  ru="алмазная руда",    count=4,  size=3,  y_min=0, y_max=16, dist="trapezoid", rarity=2, air=0.5, biomes="#minecraft:is_overworld", enabled=True),
+    "emerald":  dict(en="Emerald",  ru="изумрудная руда",  count=6,  size=2,  y_min=0, y_max=64, dist="uniform",   rarity=2, air=0.0, biomes="#minecraft:is_mountain", enabled=False),
 }
 
 NEEDS_STONE = {"coal", "copper", "iron", "lapis"}
@@ -141,13 +143,35 @@ def height(cfg):
             "height": {"type": t, "min_inclusive": lo, "max_inclusive": hi}}
 
 
+def clean_generated():
+    """Remove everything this script generates (textures of enabled ores are never touched)."""
+    for path in [DATA,
+                 os.path.join(ROOT, "data", "forge"),
+                 os.path.join(ROOT, "data", "minecraft"),
+                 os.path.join(ASSETS, "blockstates"),
+                 os.path.join(ASSETS, "models"),
+                 os.path.join(ASSETS, "lang")]:
+        shutil.rmtree(path, ignore_errors=True)
+    # textures of disabled ores are removed too
+    tex_dir = os.path.join(ASSETS, "textures", "block")
+    for stone in STONES:
+        for ore, cfg in ORES.items():
+            if not cfg["enabled"]:
+                f = os.path.join(tex_dir, f"{block_name(stone, ore)}.png")
+                if os.path.exists(f):
+                    os.remove(f)
+
+
 def main():
+    clean_generated()
     all_blocks = []
     lang_en = {f"itemGroup.{MOD_ID}": "Ore Stones Variants Revamped"}
     lang_ru = {f"itemGroup.{MOD_ID}": "Ore Stones Variants Revamped"}
 
+    active = {o: c for o, c in ORES.items() if c["enabled"]}
+
     for stone, (_, ru_stone, en_stone) in STONES.items():
-        for ore, cfg in ORES.items():
+        for ore, cfg in active.items():
             name = block_name(stone, ore)
             all_blocks.append((stone, ore, name))
             model = f"{MOD_ID}:block/{name}"
@@ -179,9 +203,9 @@ def main():
     tag(os.path.join(mc_blocks, "needs_iron_tool.json"), [f"{MOD_ID}:{n}" for _, o, n in all_blocks if o in NEEDS_IRON])
     forge_blocks = os.path.join(ROOT, "data", "forge", "tags", "blocks")
     forge_items = os.path.join(ROOT, "data", "forge", "tags", "items")
-    tag(os.path.join(forge_blocks, "ores.json"), [f"#forge:ores/{o}" for o in ORES])
-    tag(os.path.join(forge_items, "ores.json"), [f"#forge:ores/{o}" for o in ORES])
-    for ore in ORES:
+    tag(os.path.join(forge_blocks, "ores.json"), [f"#forge:ores/{o}" for o in active])
+    tag(os.path.join(forge_items, "ores.json"), [f"#forge:ores/{o}" for o in active])
+    for ore in active:
         vals = [f"{MOD_ID}:{n}" for _, o, n in all_blocks if o == ore]
         tag(os.path.join(forge_blocks, "ores", f"{ore}.json"), vals)
         tag(os.path.join(forge_items, "ores", f"{ore}.json"), vals)
@@ -193,7 +217,7 @@ def main():
     # --- world generation ---
     # one configured feature per ore, vein can cross the three stones (each block picks its own variant)
     biome_modifiers = {}
-    for ore, cfg in ORES.items():
+    for ore, cfg in active.items():
         targets = [{
             "target": {"predicate_type": "minecraft:block_match", "block": vanilla},
             "state": {"Name": f"{MOD_ID}:{block_name(stone, ore)}"},

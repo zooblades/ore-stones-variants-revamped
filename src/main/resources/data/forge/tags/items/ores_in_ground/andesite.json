@@ -2,12 +2,8 @@
   "replace": false,
   "values": [
     "ore_stones_variants_revamped:andesite_coal_ore",
-    "ore_stones_variants_revamped:andesite_copper_ore",
     "ore_stones_variants_revamped:andesite_iron_ore",
-    "ore_stones_variants_revamped:andesite_redstone_ore",
-    "ore_stones_variants_revamped:andesite_lapis_ore",
     "ore_stones_variants_revamped:andesite_gold_ore",
-    "ore_stones_variants_revamped:andesite_diamond_ore",
-    "ore_stones_variants_revamped:andesite_emerald_ore"
+    "ore_stones_variants_revamped:andesite_diamond_ore"
   ]
 }
