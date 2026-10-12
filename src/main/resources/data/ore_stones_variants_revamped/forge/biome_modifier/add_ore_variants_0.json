@@ -3,7 +3,10 @@
   "biomes": "#minecraft:is_overworld",
   "features": [
     "ore_stones_variants_revamped:ore_coal_variants",
+    "ore_stones_variants_revamped:ore_copper_variants",
     "ore_stones_variants_revamped:ore_iron_variants",
+    "ore_stones_variants_revamped:ore_redstone_variants",
+    "ore_stones_variants_revamped:ore_lapis_variants",
     "ore_stones_variants_revamped:ore_gold_variants",
     "ore_stones_variants_revamped:ore_diamond_variants"
   ],

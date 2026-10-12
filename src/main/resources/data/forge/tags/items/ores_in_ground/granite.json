@@ -2,8 +2,12 @@
   "replace": false,
   "values": [
     "ore_stones_variants_revamped:granite_coal_ore",
+    "ore_stones_variants_revamped:granite_copper_ore",
     "ore_stones_variants_revamped:granite_iron_ore",
+    "ore_stones_variants_revamped:granite_redstone_ore",
+    "ore_stones_variants_revamped:granite_lapis_ore",
     "ore_stones_variants_revamped:granite_gold_ore",
-    "ore_stones_variants_revamped:granite_diamond_ore"
+    "ore_stones_variants_revamped:granite_diamond_ore",
+    "ore_stones_variants_revamped:granite_emerald_ore"
   ]
 }
