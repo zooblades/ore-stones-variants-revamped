@@ -31,6 +31,5 @@
   "block.ore_stones_variants_revamped.tuff_lapis_ore": "Tuff Lapis Lazuli Ore",
   "block.ore_stones_variants_revamped.tuff_gold_ore": "Tuff Gold Ore",
   "block.ore_stones_variants_revamped.tuff_diamond_ore": "Tuff Diamond Ore",
-  "block.ore_stones_variants_revamped.tuff_emerald_ore": "Tuff Emerald Ore",
-  "block.ore_stones_variants_revamped.sandstone_lapis_ore": "Sandstone Lapis Lazuli Ore"
+  "block.ore_stones_variants_revamped.tuff_emerald_ore": "Tuff Emerald Ore"
 }

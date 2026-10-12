@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/cube_bottom_top",
-  "textures": {
-    "top": "ore_stones_variants_revamped:block/sandstone_lapis_ore_top",
-    "bottom": "ore_stones_variants_revamped:block/sandstone_lapis_ore_bottom",
-    "side": "ore_stones_variants_revamped:block/sandstone_lapis_ore"
-  }
-}

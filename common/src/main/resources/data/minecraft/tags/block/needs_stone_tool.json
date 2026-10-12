@@ -16,7 +16,6 @@
     "ore_stones_variants_revamped:tuff_coal_ore",
     "ore_stones_variants_revamped:tuff_copper_ore",
     "ore_stones_variants_revamped:tuff_iron_ore",
-    "ore_stones_variants_revamped:tuff_lapis_ore",
-    "ore_stones_variants_revamped:sandstone_lapis_ore"
+    "ore_stones_variants_revamped:tuff_lapis_ore"
   ]
 }

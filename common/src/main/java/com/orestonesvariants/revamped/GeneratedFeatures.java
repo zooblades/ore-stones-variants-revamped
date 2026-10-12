@@ -16,8 +16,7 @@ public final class GeneratedFeatures {
         "ore_redstone_tuff_variants",
         "ore_lapis_tuff_variants",
         "ore_gold_tuff_variants",
-        "ore_diamond_tuff_variants",
-        "ore_lapis_sandstone_variants"
+        "ore_diamond_tuff_variants"
     };
     public static final String[] MOUNTAINS = {
         "ore_emerald_variants",

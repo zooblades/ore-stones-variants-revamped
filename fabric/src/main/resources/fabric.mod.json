@@ -3,7 +3,7 @@
   "id": "ore_stones_variants_revamped",
   "version": "${version}",
   "name": "Ore Stones Variants Revamped",
-  "description": "Adds ore variants for andesite, diorite, granite and tuff, plus rare lapis in sandstone.",
+  "description": "Adds ore variants for andesite, diorite, granite and tuff.",
   "authors": ["YourNameHere"],
   "license": "MIT",
   "environment": "*",
