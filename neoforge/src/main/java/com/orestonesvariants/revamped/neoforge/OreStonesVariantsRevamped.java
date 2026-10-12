@@ -20,7 +20,7 @@ public class OreStonesVariantsRevamped {
             var block = blocks.register(entry.name(), () -> ModContent.createBlock(entry));
             items.register(entry.name(), () -> new BlockItem(block.get(), new Item.Properties()));
         }
-        tabs.register("main", ModContent::createTab);
+        tabs.register("main", () -> ModContent.createTab(CreativeModeTab.builder()));
 
         blocks.register(modEventBus);
         items.register(modEventBus);

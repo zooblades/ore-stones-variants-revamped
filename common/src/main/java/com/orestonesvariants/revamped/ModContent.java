@@ -52,8 +52,9 @@ public final class ModContent {
         return new DropExperienceBlock(entry.ore().xp, props);
     }
 
-    public static CreativeModeTab createTab() {
-        return CreativeModeTab.builder()
+    /** The builder comes from the loader (vanilla's builder needs a slot, loaders place the tab themselves). */
+    public static CreativeModeTab createTab(CreativeModeTab.Builder builder) {
+        return builder
                 .title(Component.translatable("itemGroup." + MODID))
                 .icon(() -> new ItemStack(BuiltInRegistries.ITEM.get(id("andesite_diamond_ore"))))
                 .displayItems((parameters, output) -> {
