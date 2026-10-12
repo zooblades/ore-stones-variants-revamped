@@ -23,5 +23,14 @@
   "block.ore_stones_variants_revamped.granite_lapis_ore": "Granite Lapis Lazuli Ore",
   "block.ore_stones_variants_revamped.granite_gold_ore": "Granite Gold Ore",
   "block.ore_stones_variants_revamped.granite_diamond_ore": "Granite Diamond Ore",
-  "block.ore_stones_variants_revamped.granite_emerald_ore": "Granite Emerald Ore"
+  "block.ore_stones_variants_revamped.granite_emerald_ore": "Granite Emerald Ore",
+  "block.ore_stones_variants_revamped.tuff_coal_ore": "Tuff Coal Ore",
+  "block.ore_stones_variants_revamped.tuff_copper_ore": "Tuff Copper Ore",
+  "block.ore_stones_variants_revamped.tuff_iron_ore": "Tuff Iron Ore",
+  "block.ore_stones_variants_revamped.tuff_redstone_ore": "Tuff Redstone Ore",
+  "block.ore_stones_variants_revamped.tuff_lapis_ore": "Tuff Lapis Lazuli Ore",
+  "block.ore_stones_variants_revamped.tuff_gold_ore": "Tuff Gold Ore",
+  "block.ore_stones_variants_revamped.tuff_diamond_ore": "Tuff Diamond Ore",
+  "block.ore_stones_variants_revamped.tuff_emerald_ore": "Tuff Emerald Ore",
+  "block.ore_stones_variants_revamped.sandstone_lapis_ore": "Sandstone Lapis Lazuli Ore"
 }

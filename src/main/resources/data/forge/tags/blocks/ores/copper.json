@@ -3,6 +3,7 @@
   "values": [
     "ore_stones_variants_revamped:andesite_copper_ore",
     "ore_stones_variants_revamped:diorite_copper_ore",
-    "ore_stones_variants_revamped:granite_copper_ore"
+    "ore_stones_variants_revamped:granite_copper_ore",
+    "ore_stones_variants_revamped:tuff_copper_ore"
   ]
 }

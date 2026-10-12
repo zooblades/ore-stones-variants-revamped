@@ -30,11 +30,11 @@ public final class ModBlocks {
     static {
         for (HostStone stone : HostStone.values()) {
             for (OreType ore : OreType.values()) {
-                if (!ore.enabled) {
+                if (!stone.has(ore)) {
                     continue;
                 }
                 String name = stone.id + "_" + ore.id + "_ore";
-                RegistryObject<Block> block = BLOCKS.register(name, () -> createBlock(ore));
+                RegistryObject<Block> block = BLOCKS.register(name, () -> createBlock(stone, ore));
                 ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
                 ALL_ORES.add(block);
                 if (stone == HostStone.ANDESITE && ore == OreType.DIAMOND) {
@@ -44,8 +44,9 @@ public final class ModBlocks {
         }
     }
 
-    private static Block createBlock(OreType ore) {
-        BlockBehaviour.Properties props = BlockBehaviour.Properties.copy(ore.vanilla.get());
+    private static Block createBlock(HostStone stone, OreType ore) {
+        Block template = stone == HostStone.TUFF ? ore.deepslate.get() : ore.vanilla.get();
+        BlockBehaviour.Properties props = BlockBehaviour.Properties.copy(template);
         if (ore == OreType.REDSTONE) {
             // copy() also keeps the "lit" light level function of vanilla redstone ore
             return new RedStoneOreBlock(props);

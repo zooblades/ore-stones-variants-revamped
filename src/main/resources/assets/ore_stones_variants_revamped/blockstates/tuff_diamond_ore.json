@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "ore_stones_variants_revamped:block/tuff_diamond_ore"
+    }
+  }
+}

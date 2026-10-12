@@ -3,6 +3,7 @@
   "values": [
     "ore_stones_variants_revamped:andesite_iron_ore",
     "ore_stones_variants_revamped:diorite_iron_ore",
-    "ore_stones_variants_revamped:granite_iron_ore"
+    "ore_stones_variants_revamped:granite_iron_ore",
+    "ore_stones_variants_revamped:tuff_iron_ore"
   ]
 }

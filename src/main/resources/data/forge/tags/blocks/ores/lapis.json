@@ -3,6 +3,8 @@
   "values": [
     "ore_stones_variants_revamped:andesite_lapis_ore",
     "ore_stones_variants_revamped:diorite_lapis_ore",
-    "ore_stones_variants_revamped:granite_lapis_ore"
+    "ore_stones_variants_revamped:granite_lapis_ore",
+    "ore_stones_variants_revamped:tuff_lapis_ore",
+    "ore_stones_variants_revamped:sandstone_lapis_ore"
   ]
 }

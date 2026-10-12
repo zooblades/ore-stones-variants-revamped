@@ -23,5 +23,14 @@
   "block.ore_stones_variants_revamped.granite_lapis_ore": "Гранитная лазуритовая руда",
   "block.ore_stones_variants_revamped.granite_gold_ore": "Гранитная золотая руда",
   "block.ore_stones_variants_revamped.granite_diamond_ore": "Гранитная алмазная руда",
-  "block.ore_stones_variants_revamped.granite_emerald_ore": "Гранитная изумрудная руда"
+  "block.ore_stones_variants_revamped.granite_emerald_ore": "Гранитная изумрудная руда",
+  "block.ore_stones_variants_revamped.tuff_coal_ore": "Туфовая угольная руда",
+  "block.ore_stones_variants_revamped.tuff_copper_ore": "Туфовая медная руда",
+  "block.ore_stones_variants_revamped.tuff_iron_ore": "Туфовая железная руда",
+  "block.ore_stones_variants_revamped.tuff_redstone_ore": "Туфовая редстоуновая руда",
+  "block.ore_stones_variants_revamped.tuff_lapis_ore": "Туфовая лазуритовая руда",
+  "block.ore_stones_variants_revamped.tuff_gold_ore": "Туфовая золотая руда",
+  "block.ore_stones_variants_revamped.tuff_diamond_ore": "Туфовая алмазная руда",
+  "block.ore_stones_variants_revamped.tuff_emerald_ore": "Туфовая изумрудная руда",
+  "block.ore_stones_variants_revamped.sandstone_lapis_ore": "Песчаниковая лазуритовая руда"
 }
