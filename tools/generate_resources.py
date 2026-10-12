@@ -13,9 +13,13 @@ import os
 import shutil
 
 MOD_ID = "ore_stones_variants_revamped"
-ROOT = os.path.join("src", "main", "resources")
+# Shared resources (used by both loaders) live in common/. NeoForge needs its own biome modifier JSON;
+# Fabric hooks the features into biomes from Java, so the feature list is written to GeneratedFeatures.java.
+ROOT = os.path.join("common", "src", "main", "resources")
 ASSETS = os.path.join(ROOT, "assets", MOD_ID)
 DATA = os.path.join(ROOT, "data", MOD_ID)
+NEO_DATA = os.path.join("neoforge", "src", "main", "resources", "data", MOD_ID)
+GEN_JAVA = os.path.join("common", "src", "main", "java", "com", "orestonesvariants", "revamped", "GeneratedFeatures.java")
 
 # host id -> (vanilla block, ru adjective, en name)
 HOSTS = {
@@ -158,7 +162,8 @@ def loot_table(host, ore_id):
                 "children": [
                     {"type": "minecraft:item",
                      "conditions": [{"condition": "minecraft:match_tool", "predicate": {
-                         "enchantments": [{"enchantment": "minecraft:silk_touch", "levels": {"min": 1}}]}}],
+                         "predicates": {"minecraft:enchantments": [
+                             {"enchantments": "minecraft:silk_touch", "levels": {"min": 1}}]}}}],
                      "name": f"{MOD_ID}:{name}"},
                     {"type": "minecraft:item", "functions": functions, "name": item},
                 ],
@@ -186,8 +191,8 @@ def veins_per_chunk(group, cfg):
 
 def clean_generated():
     """Remove everything this script generates (existing textures are never touched)."""
-    for path in [DATA,
-                 os.path.join(ROOT, "data", "forge"),
+    for path in [DATA, NEO_DATA,
+                 os.path.join(ROOT, "data", "c"),
                  os.path.join(ROOT, "data", "minecraft"),
                  os.path.join(ASSETS, "blockstates"),
                  os.path.join(ASSETS, "models"),
@@ -226,34 +231,30 @@ def main():
                     write_json(os.path.join(ASSETS, "models", "block", f"{name}.json"),
                                {"parent": "minecraft:block/cube_all", "textures": {"all": model}})
                 write_json(os.path.join(ASSETS, "models", "item", f"{name}.json"), {"parent": model})
-                write_json(os.path.join(DATA, "loot_tables", "blocks", f"{name}.json"), loot_table(host, ore_id))
+                write_json(os.path.join(DATA, "loot_table", "blocks", f"{name}.json"), loot_table(host, ore_id))
                 lang_en[f"block.{MOD_ID}.{name}"] = f"{en_host} {cfg['en']} Ore"
                 lang_ru[f"block.{MOD_ID}.{name}"] = f"{ru_host} {cfg['ru']}"
 
     write_json(os.path.join(ASSETS, "lang", "en_us.json"), lang_en)
     write_json(os.path.join(ASSETS, "lang", "ru_ru.json"), lang_ru)
 
-    # --- tags ---
+    # --- tags (1.21: singular folder names, convention tags live in the "c" namespace) ---
     def tag(path, values):
         write_json(path, {"replace": False, "values": values})
 
     ore_ids = sorted({o for _, o, _ in blocks}, key=lambda x: list(DROPS).index(x))
-    mc_blocks = os.path.join(ROOT, "data", "minecraft", "tags", "blocks")
+    mc_blocks = os.path.join(ROOT, "data", "minecraft", "tags", "block")
     tag(os.path.join(mc_blocks, "mineable", "pickaxe.json"), [f"{MOD_ID}:{n}" for _, _, n in blocks])
     tag(os.path.join(mc_blocks, "needs_stone_tool.json"), [f"{MOD_ID}:{n}" for _, o, n in blocks if o in NEEDS_STONE])
     tag(os.path.join(mc_blocks, "needs_iron_tool.json"), [f"{MOD_ID}:{n}" for _, o, n in blocks if o in NEEDS_IRON])
-    forge_blocks = os.path.join(ROOT, "data", "forge", "tags", "blocks")
-    forge_items = os.path.join(ROOT, "data", "forge", "tags", "items")
-    tag(os.path.join(forge_blocks, "ores.json"), [f"#forge:ores/{o}" for o in ore_ids])
-    tag(os.path.join(forge_items, "ores.json"), [f"#forge:ores/{o}" for o in ore_ids])
+    c_blocks = os.path.join(ROOT, "data", "c", "tags", "block")
+    c_items = os.path.join(ROOT, "data", "c", "tags", "item")
+    tag(os.path.join(c_blocks, "ores.json"), [f"#c:ores/{o}" for o in ore_ids])
+    tag(os.path.join(c_items, "ores.json"), [f"#c:ores/{o}" for o in ore_ids])
     for o in ore_ids:
         vals = [f"{MOD_ID}:{n}" for _, oo, n in blocks if oo == o]
-        tag(os.path.join(forge_blocks, "ores", f"{o}.json"), vals)
-        tag(os.path.join(forge_items, "ores", f"{o}.json"), vals)
-    for host in HOSTS:
-        vals = [f"{MOD_ID}:{n}" for h, _, n in blocks if h == host]
-        tag(os.path.join(forge_blocks, "ores_in_ground", f"{host}.json"), vals)
-        tag(os.path.join(forge_items, "ores_in_ground", f"{host}.json"), vals)
+        tag(os.path.join(c_blocks, "ores", f"{o}.json"), vals)
+        tag(os.path.join(c_items, "ores", f"{o}.json"), vals)
 
     # --- world generation ---
     biome_modifiers = {}
@@ -280,9 +281,23 @@ def main():
             balance_rows.append((gname, ore_id, cfg))
 
     for i, (biomes, feats) in enumerate(biome_modifiers.items()):
-        write_json(os.path.join(DATA, "forge", "biome_modifier", f"add_ore_variants_{i}.json"), {
-            "type": "forge:add_features", "biomes": biomes, "features": feats, "step": "underground_ores",
+        write_json(os.path.join(NEO_DATA, "neoforge", "biome_modifier", f"add_ore_variants_{i}.json"), {
+            "type": "neoforge:add_features", "biomes": biomes, "features": feats, "step": "underground_ores",
         })
+
+    overworld = [f.split(":")[1] for b, fs in biome_modifiers.items() if b == "#minecraft:is_overworld" for f in fs]
+    mountains = [f.split(":")[1] for b, fs in biome_modifiers.items() if b == "#minecraft:is_mountain" for f in fs]
+    assert set(biome_modifiers) <= {"#minecraft:is_overworld", "#minecraft:is_mountain"}, "Fabric hook needs a selector for new biome tags"
+    arr = lambda xs: "{\n" + ",\n".join(f'        "{x}"' for x in xs) + "\n    }"
+    os.makedirs(os.path.dirname(GEN_JAVA), exist_ok=True)
+    with open(GEN_JAVA, "w", encoding="utf-8", newline="\n") as f:
+        f.write("package com.orestonesvariants.revamped;\n\n"
+                "/** GENERATED by tools/generate_resources.py. Do not edit by hand. Used by the Fabric entry point. */\n"
+                "public final class GeneratedFeatures {\n"
+                f"    public static final String[] OVERWORLD = {arr(overworld)};\n"
+                f"    public static final String[] MOUNTAINS = {arr(mountains)};\n\n"
+                "    private GeneratedFeatures() {}\n"
+                "}\n")
 
     # --- BALANCE.md (estimates) ---
     titles = {"stone": "Андезит, диорит, гранит (Y 0…60)", "tuff": "Туф (Y -64…-1)", "sandstone": "Песчаник (пустыни и пляжи)"}

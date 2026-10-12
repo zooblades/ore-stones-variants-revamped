@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "ore_stones_variants_revamped",
+  "version": "${version}",
+  "name": "Ore Stones Variants Revamped",
+  "description": "Adds ore variants for andesite, diorite, granite and tuff, plus rare lapis in sandstone.",
+  "authors": ["YourNameHere"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.orestonesvariants.revamped.fabric.OreStonesVariantsRevampedFabric"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": ">=1.21 <1.21.2",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

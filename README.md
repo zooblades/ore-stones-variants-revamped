@@ -1,6 +1,6 @@
 # Ore Stones Variants Revamped
 
-Мод для **NeoForge 1.20.1** (совместим с Forge 47.1.x). Добавляет варианты всех ванильных руд в **андезите, диорите и граните** — 33 отдельных блока: 8 руд в андезите, диорите, граните и туфе, плюс редкий лазурит в песчанике.
+Мод для **NeoForge и Fabric**. Ветка `1.21.1` — Minecraft 1.21 / 1.21.1; ветка `1.20.1` — NeoForge/Forge 1.20.1. Добавляет варианты всех ванильных руд в **андезите, диорите и граните** — 33 отдельных блока: 8 руд в андезите, диорите, граните и туфе, плюс редкий лазурит в песчанике.
 
 ## Блоки
 
@@ -32,11 +32,21 @@ python3 tools/generate_resources.py
 
 Положите свои PNG 16×16 в `src/main/resources/assets/ore_stones_variants_revamped/textures/block/` с именами блоков, например `andesite_coal_ore.png`. Сейчас там простые временные текстуры, их можно просто заменить файлами с теми же именами.
 
+## Структура ветки 1.21.1
+
+- `common/` — общий Java-код (блоки, камни, вкладка) и **все** ресурсы (текстуры, модели, лут, теги, генерация мира);
+- `neoforge/` — вход для NeoForge (Gradle, ModDevGradle);
+- `fabric/` — вход для Fabric (Gradle, Loom). Нужен Fabric API.
+
 ## Сборка
 
-Нужна Java 17+ (Gradle сам подтянет toolchain).
+Готовые jar собирает GitHub Actions и выкладывает в раздел Releases (отдельный файл для NeoForge и для Fabric).
+
+Локально:
 
 ```
-./gradlew build      # jar в build/libs
-./gradlew runClient  # запуск клиента для теста
+cd neoforge && ./gradlew build     # JDK 21, jar в neoforge/build/libs
+cd fabric   && ./gradlew build     # JDK 25 (как в шаблоне Fabric), jar в fabric/build/libs
 ```
+
+Ресурсы пересоздаются командой `python3 tools/generate_resources.py` (запускать из корня репозитория).

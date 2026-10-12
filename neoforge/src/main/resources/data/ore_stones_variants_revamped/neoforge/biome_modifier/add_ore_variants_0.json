@@ -1,0 +1,22 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": [
+    "ore_stones_variants_revamped:ore_coal_variants",
+    "ore_stones_variants_revamped:ore_copper_variants",
+    "ore_stones_variants_revamped:ore_iron_variants",
+    "ore_stones_variants_revamped:ore_redstone_variants",
+    "ore_stones_variants_revamped:ore_lapis_variants",
+    "ore_stones_variants_revamped:ore_gold_variants",
+    "ore_stones_variants_revamped:ore_diamond_variants",
+    "ore_stones_variants_revamped:ore_coal_tuff_variants",
+    "ore_stones_variants_revamped:ore_copper_tuff_variants",
+    "ore_stones_variants_revamped:ore_iron_tuff_variants",
+    "ore_stones_variants_revamped:ore_redstone_tuff_variants",
+    "ore_stones_variants_revamped:ore_lapis_tuff_variants",
+    "ore_stones_variants_revamped:ore_gold_tuff_variants",
+    "ore_stones_variants_revamped:ore_diamond_tuff_variants",
+    "ore_stones_variants_revamped:ore_lapis_sandstone_variants"
+  ],
+  "step": "underground_ores"
+}
