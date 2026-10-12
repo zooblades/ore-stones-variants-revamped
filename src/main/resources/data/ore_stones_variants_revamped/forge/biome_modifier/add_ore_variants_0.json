@@ -15,8 +15,7 @@
     "ore_stones_variants_revamped:ore_redstone_tuff_variants",
     "ore_stones_variants_revamped:ore_lapis_tuff_variants",
     "ore_stones_variants_revamped:ore_gold_tuff_variants",
-    "ore_stones_variants_revamped:ore_diamond_tuff_variants",
-    "ore_stones_variants_revamped:ore_lapis_sandstone_variants"
+    "ore_stones_variants_revamped:ore_diamond_tuff_variants"
   ],
   "step": "underground_ores"
 }

@@ -5,9 +5,7 @@ public enum HostStone {
     ANDESITE("andesite"),
     DIORITE("diorite"),
     GRANITE("granite"),
-    TUFF("tuff"),
-    /** Only lapis is generated in sandstone. */
-    SANDSTONE("sandstone");
+    TUFF("tuff");
 
     public final String id;
 
@@ -15,8 +13,8 @@ public enum HostStone {
         this.id = id;
     }
 
-    /** Which ores exist for this host. Keep in sync with GROUPS in tools/generate_resources.py. */
+    /** Which ores exist for this host (all of them at the moment). Keep in sync with GROUPS in tools/generate_resources.py. */
     public boolean has(OreType ore) {
-        return this != SANDSTONE || ore == OreType.LAPIS;
+        return true;
     }
 }

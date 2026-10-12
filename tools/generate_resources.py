@@ -23,15 +23,13 @@ HOSTS = {
     "diorite": ("minecraft:diorite", "Диоритовая", "Diorite"),
     "granite": ("minecraft:granite", "Гранитная", "Granite"),
     "tuff": ("minecraft:tuff", "Туфовая", "Tuff"),
-    "sandstone": ("minecraft:sandstone", "Песчаниковая", "Sandstone"),
 }
 
 # Share of underground volume that a host occupies at the heights where its blobs exist.
 # andesite+diorite+granite blobs: 3 x (2 blobs x 64 blocks) per chunk in Y 0..60  -> ~2.5%
 # tuff blobs: 2 blobs x 64 blocks per chunk in Y -64..0                           -> ~0.75%
-# sandstone: a ~5 block thick layer under desert/beach sand, estimated hit rate ~19% for Y 55..80
-DENSITY = {"stone": 0.025, "tuff": 0.0075, "sandstone": 0.19}
-SURFACE_BAND = {"stone": (0, 60), "tuff": (-64, 0), "sandstone": (55, 80)}
+DENSITY = {"stone": 0.025, "tuff": 0.0075}
+SURFACE_BAND = {"stone": (0, 60), "tuff": (-64, 0)}
 
 # ---------------------------------------------------------------------------
 # BALANCE TABLES
@@ -69,10 +67,6 @@ GROUPS = {
         "diamond":  ore("Diamond", "алмазная руда", 6, 3, -64, -16, rarity=2, air=0.5),
         "emerald":  ore("Emerald", "изумрудная руда", 7, 2, -64, -1, rarity=2, biomes="#minecraft:is_mountain"),
     }),
-    # rare lapis in sandstone (under desert / beach sand)
-    "sandstone": dict(hosts=["sandstone"], feature="ore_{ore}_sandstone_variants", ores={
-        "lapis":    ore("Lapis Lazuli", "лазуритовая руда", 2, 4, 55, 80, rarity=5),
-    }),
 }
 
 NEEDS_STONE = {"coal", "copper", "iron", "lapis"}
@@ -95,10 +89,10 @@ PLACEHOLDER_ORE_COLORS = {
 }
 PLACEHOLDER_HOST_COLORS = {
     "andesite": (136, 136, 136), "diorite": (200, 200, 200), "granite": (155, 105, 90),
-    "tuff": (106, 110, 111), "sandstone": (218, 210, 163),
+    "tuff": (106, 110, 111),
 }
-# sandstone has distinct top/bottom textures
-EXTRA_FACES = {"sandstone": ["top", "bottom"]}
+# hosts with distinct top/bottom textures (none at the moment)
+EXTRA_FACES = {}
 
 
 def write_json(path, obj):
@@ -179,8 +173,6 @@ def veins_per_chunk(group, cfg):
     """Rough estimate of veins that actually start inside the host per chunk."""
     lo, hi = SURFACE_BAND[group]
     overlap = max(0, min(cfg["y_max"], hi) - max(cfg["y_min"], lo)) / max(1, cfg["y_max"] - cfg["y_min"])
-    if group == "sandstone":
-        overlap = 1.0
     return cfg["count"] * DENSITY[group] * overlap / cfg["rarity"]
 
 
@@ -285,7 +277,7 @@ def main():
         })
 
     # --- BALANCE.md (estimates) ---
-    titles = {"stone": "Андезит, диорит, гранит (Y 0…60)", "tuff": "Туф (Y -64…-1)", "sandstone": "Песчаник (пустыни и пляжи)"}
+    titles = {"stone": "Андезит, диорит, гранит (Y 0…60)", "tuff": "Туф (Y -64…-1)"}
     lines = ["# Баланс генерации (оценка)", "",
              "Файл создаётся скриптом `tools/generate_resources.py`. «Жил на чанк» это оценка: жила появляется,",
              "только если попытка попала в нужный камень. В реальном мире цифры будут немного отличаться.", ""]
@@ -306,9 +298,9 @@ def main():
                 rar += ", горные биомы"
             lines.append(f"| {cfg['ru'].capitalize()} | {cfg['count']} | {cfg['size']} | {cfg['y_min']}…{cfg['y_max']} | {rar} | {v:.3f} | ~{1 / v:.0f} |")
         lines.append("")
-    lines += ["## Итого (без песчаника)", "", "| Руда | Жил на чанк, все камни |", "|---|---|"]
+    lines += ["## Итого", "", "| Руда | Жил на чанк, все камни |", "|---|---|"]
     for o in DROPS:
-        t = sum(veins_per_chunk(g, c) for g, oo, c in balance_rows if oo == o and g != "sandstone")
+        t = sum(veins_per_chunk(g, c) for g, oo, c in balance_rows if oo == o)
         lines.append(f"| {o} | {t:.3f} |")
     with open("BALANCE.md", "w", encoding="utf-8", newline="\n") as f:
         f.write("\n".join(lines) + "\n")
