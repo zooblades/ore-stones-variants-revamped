@@ -36,14 +36,14 @@ STONES = {  # id -> (vanilla block, ru name, en name)
 # enabled = False -> ore is not generated at all (also set "enabled" in OreType.java!)
 # ---------------------------------------------------------------------------
 ORES = {
-    "coal":     dict(en="Coal",     ru="угольная руда",    count=20, size=10, y_min=0, y_max=80, dist="uniform",   rarity=1, air=0.0, biomes="#minecraft:is_overworld", enabled=True),
-    "copper":   dict(en="Copper",   ru="медная руда",      count=14, size=8,  y_min=0, y_max=64, dist="trapezoid", rarity=1, air=0.0, biomes="#minecraft:is_overworld", enabled=True),
-    "iron":     dict(en="Iron",     ru="железная руда",    count=10, size=6,  y_min=0, y_max=60, dist="trapezoid", rarity=1, air=0.0, biomes="#minecraft:is_overworld", enabled=True),
-    "redstone": dict(en="Redstone", ru="редстоуновая руда",count=8,  size=5,  y_min=0, y_max=15, dist="uniform",   rarity=1, air=0.0, biomes="#minecraft:is_overworld", enabled=True),
-    "lapis":    dict(en="Lapis Lazuli", ru="лазуритовая руда", count=4, size=4, y_min=0, y_max=32, dist="trapezoid", rarity=1, air=0.5, biomes="#minecraft:is_overworld", enabled=True),
-    "gold":     dict(en="Gold",     ru="золотая руда",     count=4,  size=4,  y_min=0, y_max=32, dist="trapezoid", rarity=1, air=0.0, biomes="#minecraft:is_overworld", enabled=True),
-    "diamond":  dict(en="Diamond",  ru="алмазная руда",    count=4,  size=3,  y_min=0, y_max=16, dist="trapezoid", rarity=2, air=0.5, biomes="#minecraft:is_overworld", enabled=True),
-    "emerald":  dict(en="Emerald",  ru="изумрудная руда",  count=6,  size=2,  y_min=0, y_max=64, dist="uniform",   rarity=2, air=0.0, biomes="#minecraft:is_mountain", enabled=True),
+    "coal":     dict(en="Coal",     ru="угольная руда",    count=30, size=10, y_min=0, y_max=80, dist="uniform",   rarity=1, air=0.0, biomes="#minecraft:is_overworld", enabled=True),
+    "copper":   dict(en="Copper",   ru="медная руда",      count=22, size=8,  y_min=0, y_max=64, dist="trapezoid", rarity=1, air=0.0, biomes="#minecraft:is_overworld", enabled=True),
+    "iron":     dict(en="Iron",     ru="железная руда",    count=16, size=6,  y_min=0, y_max=60, dist="trapezoid", rarity=1, air=0.0, biomes="#minecraft:is_overworld", enabled=True),
+    "redstone": dict(en="Redstone", ru="редстоуновая руда",count=12,  size=5,  y_min=0, y_max=15, dist="uniform",   rarity=1, air=0.0, biomes="#minecraft:is_overworld", enabled=True),
+    "lapis":    dict(en="Lapis Lazuli", ru="лазуритовая руда", count=6, size=4, y_min=0, y_max=32, dist="trapezoid", rarity=1, air=0.5, biomes="#minecraft:is_overworld", enabled=True),
+    "gold":     dict(en="Gold",     ru="золотая руда",     count=6,  size=4,  y_min=0, y_max=32, dist="trapezoid", rarity=1, air=0.0, biomes="#minecraft:is_overworld", enabled=True),
+    "diamond":  dict(en="Diamond",  ru="алмазная руда",    count=5,  size=3,  y_min=0, y_max=16, dist="trapezoid", rarity=2, air=0.5, biomes="#minecraft:is_overworld", enabled=True),
+    "emerald":  dict(en="Emerald",  ru="изумрудная руда",  count=8,  size=2,  y_min=0, y_max=64, dist="uniform",   rarity=2, air=0.0, biomes="#minecraft:is_mountain", enabled=True),
 }
 
 NEEDS_STONE = {"coal", "copper", "iron", "lapis"}
