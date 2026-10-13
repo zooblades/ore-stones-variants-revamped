@@ -10,7 +10,7 @@ WORK=$(mktemp -d); cd "$WORK"; mkdir mods; cp "$JAR" mods/
 fail() {
   echo "::error title=SMOKE FAIL $LOADER $MC::$1"
   if [ -f server.log ]; then
-    grep -iE "ERROR|Exception|Caused by|$NS|Failed|missing|Changed the block|Placed feature|not loaded|Unknown|Could not|forceload|Marked" server.log | cut -c1-400 | sed 's/%/%25/g' | head -9 | while read -r l; do echo "::error title=log $LOADER $MC::$l"; done
+    grep -iE "ERROR|Exception|Caused by|$NS|Failed|missing|Changed the block|Placed|not loaded|Unknown|Could not|forceload|Marked" server.log | cut -c1-400 | sed 's/%/%25/g' | head -9 | while read -r l; do echo "::error title=log $LOADER $MC::$l"; done
     echo "----- last 60 log lines -----"; tail -60 server.log
   fi
   exit 1
@@ -55,11 +55,16 @@ commander() {
   sleep 1
   echo "fill 0 -40 0 8 -30 8 minecraft:tuff"
   sleep 1
-  echo "place feature $NS:ore_diamond_tuff_variants 4 -35 4"
-  sleep 1
+  for pos in "4 -35 4" "5 -34 3" "3 -36 5"; do
+    echo "place feature $NS:ore_diamond_tuff_variants $pos"
+    sleep 1
+  done
   echo "fill 0 20 0 8 30 8 minecraft:granite"
   sleep 1
-  echo "place feature $NS:ore_gold_variants 4 25 4"
+  for pos in "4 25 4" "5 26 3" "3 24 5"; do
+    echo "place feature $NS:ore_gold_variants $pos"
+    sleep 1
+  done
   sleep 4
   echo "stop"
   sleep 8
@@ -70,7 +75,8 @@ echo "server exit code: $?"
 grep -q 'Done (' server.log || fail "server did not finish loading"
 grep -q "Changed the block at 0, 100, 0" server.log || fail "setblock tuff_redstone_ore did not work (block missing?)"
 grep -q "Changed the block at 1, 100, 0" server.log || fail "setblock andesite_coal_ore did not work (block missing?)"
-[ "$(grep -c 'Placed feature' server.log)" -ge 2 ] || fail "ore features were not placed (worldgen JSON not loaded?)"
+grep -q "Placed \"$NS:ore_diamond_tuff_variants\"" server.log || fail "tuff ore feature was not placed (worldgen JSON not loaded?)"
+grep -q "Placed \"$NS:ore_gold_variants\"" server.log || fail "stone ore feature was not placed (worldgen JSON not loaded?)"
 if grep -E "Failed to load|Couldn't parse|Parsing error|Unbound values|Missing" server.log | grep -qi "$NS"; then fail "errors mentioning the mod found in log"; fi
 echo "::notice title=SMOKE PASS $LOADER $MC::server started, blocks registered, ore features placed"
 echo "SMOKE PASS $LOADER $MC"
