@@ -188,6 +188,7 @@ def clean_generated():
                  os.path.join(ROOT, "data", "minecraft"),
                  os.path.join(ASSETS, "blockstates"),
                  os.path.join(ASSETS, "models"),
+                 os.path.join(ASSETS, "items"),
                  os.path.join(ASSETS, "lang")]:
         shutil.rmtree(path, ignore_errors=True)
 
@@ -223,6 +224,8 @@ def main():
                     write_json(os.path.join(ASSETS, "models", "block", f"{name}.json"),
                                {"parent": "minecraft:block/cube_all", "textures": {"all": model}})
                 write_json(os.path.join(ASSETS, "models", "item", f"{name}.json"), {"parent": model})
+                # 1.21.4+ item model definition (older versions ignore this folder)
+                write_json(os.path.join(ASSETS, "items", f"{name}.json"), {"model": {"type": "minecraft:model", "model": model}})
                 write_json(os.path.join(DATA, "loot_table", "blocks", f"{name}.json"), loot_table(host, ore_id))
                 lang_en[f"block.{MOD_ID}.{name}"] = f"{en_host} {cfg['en']} Ore"
                 lang_ru[f"block.{MOD_ID}.{name}"] = f"{ru_host} {cfg['ru']}"

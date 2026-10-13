@@ -11,8 +11,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -22,7 +20,7 @@ public class OreStonesVariantsRevampedFabric implements ModInitializer {
     public void onInitialize() {
         for (ModContent.Entry entry : ModContent.ENTRIES) {
             Block block = Registry.register(BuiltInRegistries.BLOCK, ModContent.id(entry.name()), ModContent.createBlock(entry));
-            Registry.register(BuiltInRegistries.ITEM, ModContent.id(entry.name()), new BlockItem(block, new Item.Properties()));
+            Registry.register(BuiltInRegistries.ITEM, ModContent.id(entry.name()), ModContent.createBlockItem(entry, block));
         }
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, ModContent.id("main"), ModContent.createTab(FabricItemGroup.builder()));
 

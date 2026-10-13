@@ -43,7 +43,7 @@ jobs:
       - name: Upload jar
         uses: actions/upload-artifact@v4
         with:
-          name: neoforge-mc1.21.1
+          name: neoforge-mc1.21.4
           path: |
             neoforge/build/libs/*.jar
             !neoforge/build/libs/*-sources.jar
@@ -81,7 +81,7 @@ jobs:
       - name: Upload jar
         uses: actions/upload-artifact@v4
         with:
-          name: fabric-mc1.21.1
+          name: fabric-mc1.21.4
           path: |
             fabric/build/libs/*.jar
             !fabric/build/libs/*-sources.jar
