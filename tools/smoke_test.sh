@@ -10,7 +10,7 @@ WORK=$(mktemp -d); cd "$WORK"; mkdir mods; cp "$JAR" mods/
 fail() {
   echo "::error title=SMOKE FAIL $LOADER $MC::$1"
   if [ -f server.log ]; then
-    grep -iE "ERROR|Exception|Caused by|$NS|Failed|missing" server.log | cut -c1-400 | sed 's/%/%25/g' | head -9 | while read -r l; do echo "::error title=log $LOADER $MC::$l"; done
+    grep -iE "ERROR|Exception|Caused by|$NS|Failed|missing|Changed the block|Placed feature|not loaded|Unknown|Could not|forceload|Marked" server.log | cut -c1-400 | sed 's/%/%25/g' | head -9 | while read -r l; do echo "::error title=log $LOADER $MC::$l"; done
     echo "----- last 60 log lines -----"; tail -60 server.log
   fi
   exit 1
@@ -47,6 +47,8 @@ esac
 commander() {
   for i in $(seq 1 150); do grep -q 'Done (' server.log 2>/dev/null && break; sleep 2; done
   sleep 3
+  echo "forceload add 0 0 15 15"
+  sleep 10
   echo "setblock 0 100 0 $NS:tuff_redstone_ore"
   sleep 1
   echo "setblock 1 100 0 $NS:andesite_coal_ore"
