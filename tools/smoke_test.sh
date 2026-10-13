@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 # Starts a real dedicated server with the mod jar and checks that blocks and ore features work.
-# usage: tools/smoke_test.sh <fabric|neoforge> <minecraft version> <path to mod jar>
+# usage: tools/smoke_test.sh <fabric|neoforge|forge|neoforge-legacy> <minecraft version> <path to mod jar> [loader version]
+#   neoforge        = NeoForge 21.x (Minecraft 1.21+)
+#   forge           = Minecraft Forge 1.20.1
+#   neoforge-legacy = NeoForge 1.20.1 (net.neoforged:forge)
 # Runs in CI (needs curl, jq, java). Result is reported as GitHub annotations (::notice / ::error).
 set -uo pipefail
-LOADER=$1; MC=$2; JAR=$(realpath "$3")
+LOADER=$1; MC=$2; JAR=$(realpath "$3"); VERSION_OVERRIDE=${4:-}
 NS=ore_stones_variants_revamped
 WORK=$(mktemp -d); cd "$WORK"; mkdir mods; cp "$JAR" mods/
 
@@ -39,6 +42,22 @@ case "$LOADER" in
     java -jar installer.jar --installServer > install.log 2>&1 || { cp install.log server.log; fail "neoforge installer failed"; }
     echo "-Xmx2G" >> user_jvm_args.txt
     CMD=(java @user_jvm_args.txt "@libraries/net/neoforged/neoforge/$V/unix_args.txt" nogui)
+    ;;
+  forge|neoforge-legacy)
+    if [ "$LOADER" = forge ]; then
+      MAVEN=https://maven.minecraftforge.net/net/minecraftforge/forge; PATHDIR=net/minecraftforge/forge
+    else
+      MAVEN=https://maven.neoforged.net/releases/net/neoforged/forge; PATHDIR=net/neoforged/forge
+    fi
+    if [ -n "$VERSION_OVERRIDE" ]; then V="$MC-$VERSION_OVERRIDE"
+    else V=$(curl -fsSL "$MAVEN/maven-metadata.xml" | grep -o "<version>$MC-[^<]*</version>" | sed 's/<[^>]*>//g' | tail -1)
+    fi
+    [ -n "$V" ] || fail "no $LOADER version found for $MC"
+    echo "$LOADER version: $V"
+    curl -fsSL -o installer.jar "$MAVEN/$V/forge-$V-installer.jar" || fail "cannot download $LOADER installer"
+    java -jar installer.jar --installServer > install.log 2>&1 || { cp install.log server.log; fail "$LOADER installer failed"; }
+    echo "-Xmx2G" >> user_jvm_args.txt
+    CMD=(java @user_jvm_args.txt "@libraries/$PATHDIR/$V/unix_args.txt" nogui)
     ;;
   *) fail "unknown loader $LOADER" ;;
 esac
