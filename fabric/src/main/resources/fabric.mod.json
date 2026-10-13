@@ -4,7 +4,7 @@
   "version": "${version}",
   "name": "Ore Stones Variants Revamped",
   "description": "Adds ore variants for andesite, diorite, granite and tuff.",
-  "authors": ["YourNameHere"],
+  "authors": ["nazarbatrider"],
   "license": "MIT",
   "environment": "*",
   "entrypoints": {
