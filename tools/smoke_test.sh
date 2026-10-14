@@ -119,7 +119,7 @@ grep -q "Placed \"$NS:ore_coal_tuff_variants\"" server.log || fail "tuff ore fea
 grep -q "Placed \"$NS:ore_coal_variants\"" server.log || fail "stone ore feature was not placed (worldgen JSON not loaded?)"
 if grep -E "Failed to load|Couldn't parse|Parsing error|Unbound values|Missing" server.log | grep -qi "$NS"; then fail "errors mentioning the mod found in log"; fi
 # ---- natural generation report ----
-COUNTS=$(awk '/GENCOUNT_END/ {next} /GENCOUNT / {t=$0; sub(/.*GENCOUNT /,"",t); split(t,b," "); key=b[1]"_"b[2]; next} /Successfully filled/ {n=$0; sub(/.*filled /,"",n); sub(/ block.*/,"",n); cnt[key]+=n} END {for (k in cnt) print k, cnt[k]}' server.log | sort)
+COUNTS=$(awk '/GENCOUNT_END/ {key=""; next} /GENCOUNT / {t=$0; sub(/.*GENCOUNT /,"",t); split(t,b," "); key=b[1]"_"b[2]; next} /Successfully filled/ && key != "" {n=$0; sub(/.*filled /,"",n); sub(/ block.*/,"",n); cnt[key]+=n} END {for (k in cnt) print k, cnt[k]}' server.log | sort)
 count_of() { echo "$COUNTS" | awk -v k="$1" '$1==k {print $2}' | head -1 | grep . || echo 0; }
 grep -q 'GENCOUNT_END' server.log || fail "natural generation count did not finish"
 REPORT=""
