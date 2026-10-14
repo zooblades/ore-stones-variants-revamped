@@ -251,6 +251,10 @@ def main():
         tag(os.path.join(c_blocks, "ores", f"{o}.json"), vals)
         tag(os.path.join(c_items, "ores", f"{o}.json"), vals)
 
+    # tags used by tools/smoke_test.sh to count ore blocks that generated naturally
+    for o in ore_ids:
+        tag(os.path.join(DATA, "tags", "block", "variants", f"{o}.json"), [f"{MOD_ID}:{n}" for _, oo, n in blocks if oo == o])
+
     # --- world generation ---
     biome_modifiers = {}
     balance_rows = []

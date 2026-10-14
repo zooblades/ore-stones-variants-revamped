@@ -62,12 +62,33 @@ case "$LOADER" in
   *) fail "unknown loader $LOADER" ;;
 esac
 
-# Wait until the server reports "Done", then place blocks, force an ore feature to generate and stop.
+# Wait until the server reports "Done", generate 64 chunks naturally and count ore variant blocks
+# (fill ... replace #tag reports how many blocks matched), then place blocks / features by hand and stop.
 commander() {
-  for i in $(seq 1 150); do grep -q 'Done (' server.log 2>/dev/null && break; sleep 2; done
+  for i in $(seq 1 200); do grep -q 'Done (' server.log 2>/dev/null && break; sleep 2; done
   sleep 3
-  echo "forceload add 0 0 15 15"
-  sleep 10
+  echo "forceload add -64 -64 63 63"
+  for i in $(seq 1 40); do
+    echo "execute if loaded 63 64 63 run say GEN_LOADED"
+    sleep 5
+    grep -q 'GEN_LOADED' server.log 2>/dev/null && break
+    if grep -q 'Unknown or incomplete command' server.log 2>/dev/null; then sleep 70; break; fi
+  done
+  sleep 3
+  for ore in coal copper iron gold redstone lapis diamond emerald; do
+    for region in stone tuff; do
+      if [ "$region" = stone ]; then y1=0; y2=120; else y1=-64; y2=-1; fi
+      echo "say GENCOUNT $ore $region"
+      for cx in -4 -3 -2 -1 0 1 2 3; do
+        for cz in -4 -3 -2 -1 0 1 2 3; do
+          echo "fill $((cx*16)) $y1 $((cz*16)) $((cx*16+15)) $y2 $((cz*16+15)) minecraft:air replace #$NS:variants/$ore"
+          sleep 0.1
+        done
+      done
+    done
+  done
+  echo "say GENCOUNT_END"
+  sleep 3
   echo "setblock 0 100 0 $NS:tuff_redstone_ore"
   sleep 1
   echo "setblock 1 100 0 $NS:andesite_coal_ore"
@@ -88,7 +109,7 @@ commander() {
   echo "stop"
   sleep 8
 }
-commander | timeout 360 "${CMD[@]}" > server.log 2>&1
+commander | timeout 900 "${CMD[@]}" > server.log 2>&1
 echo "server exit code: $?"
 
 grep -q 'Done (' server.log || fail "server did not finish loading"
@@ -97,5 +118,19 @@ grep -q "Changed the block at 1, 100, 0" server.log || fail "setblock andesite_c
 grep -q "Placed \"$NS:ore_coal_tuff_variants\"" server.log || fail "tuff ore feature was not placed (worldgen JSON not loaded?)"
 grep -q "Placed \"$NS:ore_coal_variants\"" server.log || fail "stone ore feature was not placed (worldgen JSON not loaded?)"
 if grep -E "Failed to load|Couldn't parse|Parsing error|Unbound values|Missing" server.log | grep -qi "$NS"; then fail "errors mentioning the mod found in log"; fi
+# ---- natural generation report ----
+COUNTS=$(awk '/GENCOUNT_END/ {next} /GENCOUNT / {t=$0; sub(/.*GENCOUNT /,"",t); split(t,b," "); key=b[1]"_"b[2]; next} /Successfully filled/ {n=$0; sub(/.*filled /,"",n); sub(/ block.*/,"",n); cnt[key]+=n} END {for (k in cnt) print k, cnt[k]}' server.log | sort)
+count_of() { echo "$COUNTS" | awk -v k="$1" '$1==k {print $2}' | head -1 | grep . || echo 0; }
+grep -q 'GENCOUNT_END' server.log || fail "natural generation count did not finish"
+REPORT=""
+for ore in coal copper iron gold redstone lapis diamond emerald; do
+  REPORT="$REPORT $ore: stone=$(count_of ${ore}_stone) tuff=$(count_of ${ore}_tuff);"
+done
+echo "::notice title=GEN $LOADER $MC (ore blocks in 64 chunks)::$REPORT"
+echo "GEN $LOADER $MC (ore blocks in 64 chunks):$REPORT"
+for ore in coal copper iron redstone; do
+  [ "$(count_of ${ore}_stone)" -gt 0 ] || fail "no natural $ore variants in stone (biome hook / placement broken?). counts:$REPORT"
+  [ "$(count_of ${ore}_tuff)" -gt 0 ] || fail "no natural $ore variants in tuff (biome hook / placement broken?). counts:$REPORT"
+done
 echo "::notice title=SMOKE PASS $LOADER $MC::server started, blocks registered, ore features placed"
 echo "SMOKE PASS $LOADER $MC"
