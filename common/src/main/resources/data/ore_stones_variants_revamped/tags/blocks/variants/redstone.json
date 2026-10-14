@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "ore_stones_variants_revamped:andesite_redstone_ore",
+    "ore_stones_variants_revamped:diorite_redstone_ore",
+    "ore_stones_variants_revamped:granite_redstone_ore",
+    "ore_stones_variants_revamped:tuff_redstone_ore"
+  ]
+}

@@ -29,10 +29,10 @@ HOSTS = {
     "tuff": ("minecraft:tuff", "Туфовая", "Tuff"),
 }
 
-# Share of underground volume that a host occupies at the heights where its blobs exist.
-# andesite+diorite+granite blobs: 3 x (2 blobs x 64 blocks) per chunk in Y 0..60  -> ~2.5%
-# tuff blobs: 2 blobs x 64 blocks per chunk in Y -64..0                           -> ~0.75%
-DENSITY = {"stone": 0.025, "tuff": 0.0075}
+# Effective share of host blocks, CALIBRATED against real generated worlds (tools/smoke_test.sh counts the
+# ore blocks that appear in 64 chunks). A vein of N blocks overlaps the stone blobs far more often than the
+# naive blob volume (about 2.5% / 0.75%) suggests.
+DENSITY = {"stone": 0.10, "tuff": 0.045}
 SURFACE_BAND = {"stone": (0, 60), "tuff": (-64, 0)}
 
 # ---------------------------------------------------------------------------
@@ -173,11 +173,11 @@ def height(cfg):
             "height": {"type": t, "min_inclusive": lo, "max_inclusive": hi}}
 
 
-def veins_per_chunk(group, cfg):
-    """Rough estimate of veins that actually start inside the host per chunk."""
+def blocks_per_chunk(group, cfg):
+    """Estimated number of ore blocks per chunk (calibrated, see DENSITY)."""
     lo, hi = SURFACE_BAND[group]
     overlap = max(0, min(cfg["y_max"], hi) - max(cfg["y_min"], lo)) / max(1, cfg["y_max"] - cfg["y_min"])
-    return cfg["count"] * DENSITY[group] * overlap / cfg["rarity"]
+    return cfg["count"] * cfg["size"] * DENSITY[group] * overlap * (1 - cfg["air"]) / cfg["rarity"]
 
 
 def clean_generated():
@@ -262,6 +262,10 @@ def main():
         tag(os.path.join(c_blocks, f"{o}_ores.json"), vals)
         tag(os.path.join(c_items, f"{o}_ores.json"), vals)
 
+    # tags used by tools/smoke_test.sh to count ore blocks that generated naturally
+    for o in ore_ids:
+        tag(os.path.join(DATA, "tags", "blocks", "variants", f"{o}.json"), [f"{MOD_ID}:{n}" for _, oo, n in blocks if oo == o])
+
     # --- world generation ---
     biome_modifiers = {}
     balance_rows = []
@@ -308,29 +312,29 @@ def main():
     # --- BALANCE.md (estimates) ---
     titles = {"stone": "Андезит, диорит, гранит (Y 0…60)", "tuff": "Туф (Y -64…-1)"}
     lines = ["# Баланс генерации (оценка)", "",
-             "Файл создаётся скриптом `tools/generate_resources.py`. «Жил на чанк» это оценка: жила появляется,",
-             "только если попытка попала в нужный камень. В реальном мире цифры будут немного отличаться.", ""]
+             "Файл создаётся скриптом `tools/generate_resources.py`. «Блоков руды на чанк» это оценка, откалиброванная по",
+             "тестовым мирам из CI (тест считает реально сгенерированные блоки в 64 чанках). В игре цифры будут гулять.", ""]
     totals = {}
     for gname in GROUPS:
         lines += [f"## {titles[gname]}", "",
-                  "| Руда | Попыток/чанк | Размер | Y | Редкость | Жил на чанк | 1 жила на N чанков |",
-                  "|---|---|---|---|---|---|---|"]
+                  "| Руда | Попыток/чанк | Размер | Y | Редкость | Блоков руды на чанк |",
+                  "|---|---|---|---|---|---|"]
         for g, o, cfg in balance_rows:
             if g != gname:
                 continue
-            v = veins_per_chunk(g, cfg)
+            v = blocks_per_chunk(g, cfg)
             totals[o] = totals.get(o, 0) + v
             rar = "каждый чанк" if cfg["rarity"] == 1 else f"1 из {cfg['rarity']} чанков"
             if cfg["air"]:
                 rar += f", {int(cfg['air'] * 100)}% скрыть у воздуха"
             if cfg["biomes"].endswith("is_mountain"):
                 rar += ", горные биомы"
-            lines.append(f"| {cfg['ru'].capitalize()} | {cfg['count']} | {cfg['size']} | {cfg['y_min']}…{cfg['y_max']} | {rar} | {v:.3f} | ~{1 / v:.0f} |")
+            lines.append(f"| {cfg['ru'].capitalize()} | {cfg['count']} | {cfg['size']} | {cfg['y_min']}…{cfg['y_max']} | {rar} | {v:.2f} |")
         lines.append("")
-    lines += ["## Итого", "", "| Руда | Жил на чанк, все камни |", "|---|---|"]
+    lines += ["## Итого", "", "| Руда | Блоков руды на чанк, все камни |", "|---|---|"]
     for o in DROPS:
-        t = sum(veins_per_chunk(g, c) for g, oo, c in balance_rows if oo == o)
-        lines.append(f"| {o} | {t:.3f} |")
+        t = sum(blocks_per_chunk(g, c) for g, oo, c in balance_rows if oo == o)
+        lines.append(f"| {o} | {t:.2f} |")
     with open("BALANCE.md", "w", encoding="utf-8", newline="\n") as f:
         f.write("\n".join(lines) + "\n")
 
